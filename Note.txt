@@ -1,0 +1,2 @@
+Trong thu muc FMA.Data chay dong lenh:
+dotnet ef migrations add InitDb --startup-project ../FMA.API/FMA.API.csproj

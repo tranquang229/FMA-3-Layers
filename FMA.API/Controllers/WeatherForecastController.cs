@@ -1,27 +1,31 @@
-using FMA.Domain.Abstractions;
-using FMA.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FMA.API.Controllers
+namespace FMA.API.Controllers;
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    private static readonly string[] Summaries = new[]
     {
-        private readonly IDepartmentService _departmentService;
-        private readonly ILogger<WeatherForecastController> _logger;
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
 
-        public WeatherForecastController(IDepartmentService departmentService, ILogger<WeatherForecastController> logger)
+    private readonly ILogger<WeatherForecastController> _logger;
+
+    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    {
+        _logger = logger;
+    }
+
+    [HttpGet(Name = "GetWeatherForecast")]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
-            _departmentService = departmentService;
-            _logger = logger;
-        }
-
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<Department> Get()
-        {
-            return _departmentService.ProcessDepartments();
-        }
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
     }
 }
